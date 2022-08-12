@@ -1,25 +1,101 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
+import NotesList from './components/NotesList';
+import AddSearch from './components/AddSearch';
+import Header from './components/Header';
+import Container from 'react-bootstrap/Container';
 
-function App() {
+import "bootswatch/dist/lux/bootstrap.min.css";
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+const App = () => {
+  const [notes, setNotes] = useState([
+    {
+      id: 1,
+      title: "Babel",
+      body: "Babel merupakan tools open-source yang digunakan untuk mengubah sintaks ECMAScript 2015+ menjadi sintaks yang didukung oleh JavaScript engine versi lama. Babel sering dipakai ketika kita menggunakan sintaks terbaru termasuk sintaks JSX.",
+      createdAt: '2022-04-14T04:27:34.572Z',
+      archived: false,
+    },
+    {
+      id: 2,
+      title: "Functional Component",
+      body: "Functional component merupakan React component yang dibuat menggunakan fungsi JavaScript. Agar fungsi JavaScript dapat disebut component ia harus mengembalikan React element dan dipanggil layaknya React component.",
+      createdAt: '2022-04-14T04:27:34.572Z',
+      archived: false,
+    },
+    {
+      id: 3,
+      title: "Modularization",
+      body: "Dalam konteks pemrograman JavaScript, modularization merupakan teknik dalam memecah atau menggunakan kode dalam berkas JavaScript secara terpisah berdasarkan tanggung jawabnya masing-masing.",
+      createdAt: '2022-04-14T04:27:34.572Z',
+      archived: false,
+    },
+    {
+      id: 4,
+      title: "Lifecycle",
+      body: "Dalam konteks React component, lifecycle merupakan kumpulan method yang menjadi siklus hidup mulai dari component dibuat (constructor), dicetak (render), pasca-cetak (componentDidMount), dan sebagainya. ",
+      createdAt: '2022-04-14T04:27:34.572Z',
+      archived: false,
+    },
+    {
+      id: 5,
+      title: "ESM",
+      body: "ESM (ECMAScript Module) merupakan format modularisasi standar JavaScript.",
+      createdAt: '2022-04-14T04:27:34.572Z',
+      archived: false,
+    },
+    {
+      id: 6,
+      title: "Module Bundler",
+      body: "Dalam konteks pemrograman JavaScript, module bundler merupakan tools yang digunakan untuk menggabungkan seluruh modul JavaScript yang digunakan oleh aplikasi menjadi satu berkas.",
+      createdAt: '2022-04-14T04:27:34.572Z',
+      archived: false,
+    },
+  ])
+
+  const [searchText, setSearchText] = useState('');
+
+  const addNote = (title, body) => {
+    const date = new Date();
+    const newNote = {
+      id: +new Date(),
+      title: title,
+      body: body,
+      createdAt: +date,
+      archived: false,
+    };
+    const newNotes = [...notes, newNote];
+    setNotes(newNotes);
+  };
+
+  const deleteNote = (id) => {
+    const newNotes = notes.filter((note) => note.id !== id);
+    setNotes(newNotes);
+  };
+
+  const activeNotes = notes.filter((note) => !note.archived);
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Container>
+        <Header />
+
+        <AddSearch handleSearchNote={setSearchText} handleAddNote={addNote} />
+
+        <h3 style={{ textAlign: 'center' }}>Active Notes</h3>
+        <NotesList
+          notes={activeNotes.filter((note) =>
+            note.title.toLowerCase().includes(searchText.toLowerCase()))}
+          handleAddNote={addNote}
+          handleDeleteNote={deleteNote}
+        />
+        <br />
+        <h3 style={{ textAlign: 'center' }}>Archive Notes</h3>
+      </Container>
+    </>
   );
-}
+};
 
 export default App;
